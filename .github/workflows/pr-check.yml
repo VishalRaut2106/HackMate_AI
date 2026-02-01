@@ -48,7 +48,7 @@ jobs:
         cat build_logs.txt
 
     - name: Analyze Error with AI
-      if: failure() # Only run if the job has failed so far
+      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

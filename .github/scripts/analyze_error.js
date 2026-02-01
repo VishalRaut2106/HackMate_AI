@@ -2,6 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 async function analyzeError() {
+  console.log('Starting analyzeError script...');
+  console.log('Environment check:');
+  console.log('- OPENROUTER_API_KEY present:', !!process.env.OPENROUTER_API_KEY);
+  console.log('- GITHUB_TOKEN present:', !!process.env.GITHUB_TOKEN);
+  console.log('- Repo:', process.env.GITHUB_REPOSITORY);
+  console.log('- PR:', process.env.PR_NUMBER);
+
   const openRouterKey = process.env.OPENROUTER_API_KEY;
   const githubToken = process.env.GITHUB_TOKEN;
   const repoOwner = process.env.GITHUB_REPOSITORY_OWNER;
