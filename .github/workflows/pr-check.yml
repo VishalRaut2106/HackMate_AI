@@ -35,15 +35,21 @@ jobs:
       run: npm run build > build_output.txt 2>&1
 
     - name: Prepare Log File
-      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
+      if: always() # Run even if previous failed
       run: |
         echo "=== LINT OUTPUT ===" > build_logs.txt
-        cat lint_output.txt >> build_logs.txt
+        if [ -f lint_output.txt ]; then cat lint_output.txt >> build_logs.txt; else echo "No Lint Output" >> build_logs.txt; fi
         echo -e "\n\n=== BUILD OUTPUT ===" >> build_logs.txt
-        cat build_output.txt >> build_logs.txt
+        if [ -f build_output.txt ]; then cat build_output.txt >> build_logs.txt; else echo "No Build Output" >> build_logs.txt; fi
+        
+        echo "DEBUG: Listing files"
+        ls -la
+        echo "DEBUG: Content of build_logs.txt"
+        cat build_logs.txt
 
     - name: Analyze Error with AI
-      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
+      if: failure() # Only run if the job has failed so far
+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
