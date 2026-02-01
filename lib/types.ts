@@ -60,12 +60,14 @@ export interface TeamPermissions {
   canExport: boolean;
 }
 
-// Updated Project interface
+// Project Types
+export type ProjectType = 'private' | 'hackathon' | 'corporate';
+
 export interface Project {
   id: string; // Changed from project_id for consistency
   name: string;
   description: string;
-  type: 'private' | 'hackathon' | 'corporate';
+  type: ProjectType;
   status: 'planning' | 'active' | 'completed' | 'archived';
   teamId: string;
   hackathonId?: string;
