@@ -1,0 +1,54 @@
+name: PR Quality Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Needed to post comments
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Run Lint
+      id: lint
+      continue-on-error: true # Continue to build even if lint fails, to capture all errors
+      run: npm run lint > lint_output.txt 2>&1
+
+    - name: Run Build
+      id: build
+      continue-on-error: true # Continue to analysis if build fails
+      run: npm run build > build_output.txt 2>&1
+
+    - name: Prepare Log File
+      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
+      run: |
+        echo "=== LINT OUTPUT ===" > build_logs.txt
+        cat lint_output.txt >> build_logs.txt
+        echo -e "\n\n=== BUILD OUTPUT ===" >> build_logs.txt
+        cat build_output.txt >> build_logs.txt
+
+    - name: Analyze Error with AI
+      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }} node .github/scripts/analyze_error.js
+
+    - name: Fail Workflow
+      if: steps.lint.outcome == 'failure' || steps.build.outcome == 'failure'
+      run: exit 1
