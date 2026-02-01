@@ -12,9 +12,9 @@
 
 This project is built, maintained, and **exclusively owned** by:
 
-*   **Vishal Raut** - [GitHub Profile](https://github.com/VishalRaut2106/)
 *   **Lokesh Khairnar** - [GitHub Profile](https://github.com/lokeshkhairnar)
 *   **Kanhaiya Bagul** - [GitHub Profile](http://github.com/kanhaiyaBagul)
+*   **Vishal Raut** - [GitHub Profile](https://github.com/VishalRaut2106/)
 
 > **⚠️ RESTRICTED ACCESS NOTICE**
 > This software is **Proprietary**. Unauthorised use, modification, duplication, or distribution of this code without the explicit written permission of the authors listed above is **strictly prohibited**.
