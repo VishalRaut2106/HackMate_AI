@@ -1,12 +1,14 @@
 import Stripe from 'stripe'
 import { updateUserSubscription, SUBSCRIPTION_PLANS } from './subscription'
 
+// Don't crash build if key is missing, just warn
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set')
+  console.warn('STRIPE_SECRET_KEY is not set. Stripe functionality will fail at runtime.')
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_for_build', {
   apiVersion: '2025-02-24.acacia',
+  typescript: true,
 })
 
 // Create checkout session for subscription
