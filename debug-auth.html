@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Auth & Projects</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .error { color: red; }
+        .success { color: green; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>HackMate AI Debug Tool</h1>
+    
+    <div class="section">
+        <h2>1. Firebase Connection</h2>
+        <button onclick="testConnection()">Test Firebase Connection</button>
+        <div id="connection-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. Authentication Status</h2>
+        <button onclick="checkAuth()">Check Auth Status</button>
+        <div id="auth-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. User Projects</h2>
+        <button onclick="checkProjects()">Check Projects</button>
+        <div id="projects-result"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoOML8banpOyh_kjt6D1doWqKDc7AwfpI",
+            authDomain: "hackmate-ai.firebaseapp.com",
+            projectId: "hackmate-ai",
+            storageBucket: "hackmate-ai.firebasestorage.app",
+            messagingSenderId: "486410112976",
+            appId: "1:486410112976:web:bbb54b0298e47bbe9b73d5"
+        };
+
+        let app, auth, db, currentUser = null;
+
+        window.testConnection = function() {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                document.getElementById('connection-result').innerHTML = '<span class="success">✓ Firebase connected successfully</span>';
+            } catch (error) {
+                document.getElementById('connection-result').innerHTML = '<span class="error">✗ Connection failed: ' + error.message + '</span>';
+            }
+        }
+
+        window.checkAuth = function() {
+            if (!auth) {
+                document.getElementById('auth-result').innerHTML = '<span class="error">Please test connection first</span>';
+                return;
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('auth-result').innerHTML = `
+                        <span class="success">✓ User authenticated</span>
+                        <pre>
+User ID: ${user.uid}
+Email: ${user.email}
+Display Name: ${user.displayName}
+Email Verified: ${user.emailVerified}
+                        </pre>
+                    `;
+                } else {
+                    document.getElementById('auth-result').innerHTML = '<span class="error">✗ No user authenticated</span>';
+                }
+            });
+        }
+
+        window.checkProjects = async function() {
+            if (!currentUser) {
+                document.getElementById('projects-result').innerHTML = '<span class="error">Please check auth status first</span>';
+                return;
+            }
+
+            try {
+                const q = query(collection(db, "projects"), where("members", "array-contains", currentUser.uid));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    document.getElementById('projects-result').innerHTML = '<span class="error">✗ No projects found for this user</span>';
+                } else {
+                    let projectsHtml = '<span class="success">✓ Found ' + snapshot.size + ' project(s)</span><pre>';
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        projectsHtml += `
+Project ID: ${doc.id}
+Name: ${data.name || 'Unnamed'}
+Members: ${JSON.stringify(data.members)}
+Status: ${data.status}
+Created: ${data.created_at?.toDate?.() || 'Unknown'}
+---
+`;
+                    });
+                    projectsHtml += '</pre>';
+                    document.getElementById('projects-result').innerHTML = projectsHtml;
+                }
+            } catch (error) {
+                document.getElementById('projects-result').innerHTML = '<span class="error">✗ Error checking projects: ' + error.message + '</span>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Auth Test</title>
+</head>
+<body>
+    <button onclick="testAuth()">Test Email/Password Auth</button>
+    <button onclick="testAnonymous()">Test Anonymous Auth</button>
+    <div id="result"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoOML8banpOyh_kjt6D1doWqKDc7AwfpI",
+            authDomain: "hackmate-ai.firebaseapp.com",
+            projectId: "hackmate-ai",
+            storageBucket: "hackmate-ai.firebasestorage.app",
+            messagingSenderId: "486410112976",
+            appId: "1:486410112976:web:bbb54b0298e47bbe9b73d5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.testAuth = async function() {
+            try {
+                const result = await createUserWithEmailAndPassword(auth, 'test@example.com', 'password123');
+                document.getElementById('result').innerHTML = 'Email auth works: ' + result.user.email;
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Email auth error: ' + error.message;
+                console.error('Auth error:', error);
+            }
+        }
+
+        window.testAnonymous = async function() {
+            try {
+                const result = await signInAnonymously(auth);
+                document.getElementById('result').innerHTML = 'Anonymous auth works: ' + result.user.uid;
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Anonymous auth error: ' + error.message;
+                console.error('Auth error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

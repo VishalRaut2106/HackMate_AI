@@ -1,0 +1,1 @@
+export { JoinTeamDialog } from './join-team-dialog';

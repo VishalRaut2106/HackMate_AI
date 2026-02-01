@@ -1,0 +1,14 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @media (prefers-color-scheme: light) {
+      .background { fill: black; }
+      .foreground { fill: white; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .background { fill: white; }
+      .foreground { fill: black; }
+    }
+  </style>
+  <rect class="background" width="180" height="180" rx="37" />
+  <text x="90" y="115" class="foreground" font-family="Arial, sans-serif" font-weight="bold" font-size="100" text-anchor="middle">H</text>
+</svg>
