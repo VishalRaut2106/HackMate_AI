@@ -1,4 +1,4 @@
-[![HackMate AI LIVE](https://img.shields.io/badge/HackMate%20AI-LIVE-success?style=for-the-badge)](https://hackmate-ai.vercel.app/)
+[![HackMate AI LIVE](https://img.shields.io/badge/HackMate%20AI-LIVE-success?style=for-the-badge)]([https://hackmate-ai2.vercel.app/])
 
 # 🚀 HackMate AI - Optimized for Speed
 
