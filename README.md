@@ -8,7 +8,7 @@
 
 ---
 
-## 👥 Maintainers & Copyright
+## 👥 Maintainers & Copyright All rightst reserve
 
 This project is built, maintained, and **exclusively owned** by:
 
