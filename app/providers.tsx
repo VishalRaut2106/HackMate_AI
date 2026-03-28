@@ -1,16 +1,24 @@
 "use client"
 
-import { ThemeProvider } from "next-themes"
+import type React from "react"
+import { AuthProvider } from "@/lib/auth-context"
+import { Toaster } from "@/components/ui/toaster"
 
-export function Providers({ children }: { children: React.ReactNode }) {
+// Centralized global providers wrapper
+// Add future providers here (Theme, QueryClient, etc.)
+export function Providers({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <AuthProvider>
+  <ThemeProvider>
+    <QueryClientProvider>
       {children}
-    </ThemeProvider>
+      <Toaster />
+    </QueryClientProvider>
+  </ThemeProvider>
+</AuthProvider>
   )
 }
